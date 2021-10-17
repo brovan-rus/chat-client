@@ -1,9 +1,21 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { FC } from 'react';
+import { Route } from 'react-router-dom';
+import cn from 'classnames/bind';
+import styles from './App.module.css';
+import { Login } from '../Login';
+import { Room } from '../Room';
 
-function App() {
-  return <div />;
-}
+const cx = cn.bind(styles);
 
-export default App;
+export const App: FC = () => {
+  return (
+    <div className={cx('container')}>
+      <Route exact path="/">
+        <Login />
+      </Route>
+      <Route path="/room/:roomName">
+        <Room />
+      </Route>
+    </div>
+  );
+};
