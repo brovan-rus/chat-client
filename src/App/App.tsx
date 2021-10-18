@@ -11,20 +11,20 @@ import { IForm } from '../Login';
 
 const cx = cn.bind(styles);
 interface IUser {
-  user?: string;
-  room?: string;
+  name: string;
+  room: string;
   id?: string;
 }
 
 export const App: FC = () => {
   const [users, setUsers] = useState<IUser[]>([
     {
-      user: '',
+      name: '',
       room: '',
       id: '',
     },
   ]);
-  const [currentUser, setCurrentUser] = useState('');
+  const [currentUser, setCurrentUser] = useState<IUser>({ room: '', name: '' });
   const history = useHistory();
   useEffect(() => {
     socket.on('users', (users) => setUsers(users));
@@ -32,7 +32,7 @@ export const App: FC = () => {
 
   const onLogin = (values: IForm) => {
     if (values.name) {
-      setCurrentUser(values.name);
+      setCurrentUser({ name: values.name, room: values.room });
     }
     history.push(`/chat/${values.room}`);
   };

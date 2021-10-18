@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, FC, FormEvent, useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import cn from 'classnames/bind';
 import styles from './Room.module.css';
@@ -22,6 +22,7 @@ export const Room: FC = () => {
   const socket = useContext(SocketContext);
   const { roomName } = useParams<IParams>();
   const [messages, setMessages] = useState<IMessages[]>([]);
+  const [message, setMessage] = useState('');
   useEffect(() => {
     socket.on('message', (message) => {
       setMessages([...messages, message]);
@@ -31,15 +32,19 @@ export const Room: FC = () => {
       setMessages([...messages, message]);
     });
   });
-
-  console.log(messages);
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => setMessage(e.target.value);
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    socket.emit('sendMessage', message);
+    setMessage('');
+  };
 
   return (
     <div className={cx('room')}>
       <div className={cx('heading')}>
         <h1 className={cx('text', 'title')}>Комната {roomName}</h1>
         <div className={cx('info')}>
-          <p className={cx('text')}>Вы вошли как {currentUser}</p>
+          <p className={cx('text')}>Вы вошли как {currentUser.name}</p>
           <p className={cx('text')}>
             Количество пользователей в чате - {users.filter((user) => user.room === roomName).length}
           </p>
@@ -60,6 +65,19 @@ export const Room: FC = () => {
           );
         })}
       </ul>
+      <form className={cx('form')} onSubmit={handleSubmit}>
+        <input
+          className={cx('text', 'input')}
+          name="message"
+          type="text"
+          autoComplete="off"
+          value={message}
+          onChange={handleChange}
+          minLength={2}
+          required
+        />
+        <button className={cx('button', 'text')}>Отправить</button>
+      </form>
     </div>
   );
 };

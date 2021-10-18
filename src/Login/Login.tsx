@@ -1,24 +1,22 @@
-import { FC, useState, ChangeEvent, FormEvent, useContext, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { FC, useState, ChangeEvent, FormEvent, useContext } from 'react';
 import cn from 'classnames/bind';
 import styles from './Login.module.css';
 import { SocketContext } from '../contexts/SocketContext';
 
 const cx = cn.bind(styles);
 export interface IForm {
-  name?: string;
-  room?: string;
+  name: string;
+  room: string;
 }
 
 interface ILoginProps {
-  onLogin: (p: { name: string | undefined; room: string | undefined }) => void;
+  onLogin: (p: { name: string; room: string }) => void;
 }
 
 export const Login: FC<ILoginProps> = ({ onLogin }) => {
   const [values, setValues] = useState<IForm>({ name: '', room: '' });
   const [isValid, setIsValid] = useState(false);
   const socket = useContext(SocketContext);
-  const history = useHistory();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const target = e.target;

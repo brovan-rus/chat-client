@@ -69,5 +69,42 @@
   grid-template-columns: repeat(2, min-content);
   column-gap: 5px;
   max-width: 30%;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 11px;
 }
 
+.button {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background-color: var(--green);
+  border-radius: 2px;
+  cursor: pointer;
+  opacity: .9;
+  text-align: center;
+  transition: opacity .3s linear;
+}
+
+.button:hover {
+  opacity: 1;
+}
+
+.form {
+  display: grid;
+  grid-template-columns: 1fr 20%;
+  grid-template-rows: 30px;
+  column-gap: 5px;
+}
+
+.input {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  padding: 7px;
+  border: 0;
+  border-bottom: 1px solid var(--darkGray);
+  outline: none;
+  transition: all .3s linear;
+  border-radius: 4px;
+}
