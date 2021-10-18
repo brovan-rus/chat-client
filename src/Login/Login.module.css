@@ -18,6 +18,14 @@
   line-height: 27px;
 }
 
+.titleRoom {
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  margin: 0;
+}
+
 .text {
   font-family: 'Inter', 'Arial', sans-serif;
   font-size: 14px;
@@ -87,4 +95,8 @@
 
 .button:disabled:hover {
   opacity: .85;
+}
+
+.disabled {
+  display: none;
 }

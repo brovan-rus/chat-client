@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, FormEvent, useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import cn from 'classnames/bind';
 import styles from './Room.module.css';
 import { UsersContext } from '../contexts/UsersContext';
@@ -7,7 +7,7 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { SocketContext } from '../contexts/SocketContext';
 
 const cx = cn.bind(styles);
-interface IParams {
+export interface IRoom {
   roomName: string;
 }
 interface IMessages {
@@ -20,17 +20,29 @@ export const Room: FC = () => {
   const users = useContext(UsersContext);
   const currentUser = useContext(CurrentUserContext);
   const socket = useContext(SocketContext);
-  const { roomName } = useParams<IParams>();
+  const { roomName } = useParams<IRoom>();
   const [messages, setMessages] = useState<IMessages[]>([]);
   const [message, setMessage] = useState('');
+  const history = useHistory();
+
+  if (currentUser.name === '') {
+    history.push(`/${roomName}/login`);
+  }
+
   useEffect(() => {
-    socket.on('message', (message) => {
+    const mListener = (message: IMessages) => {
       setMessages([...messages, message]);
-    });
-    socket.on('notification', (notification) => {
+    };
+    const nListener = (notification: { title: string; time: string }) => {
       const message = { text: notification.title, time: notification.time, user: 'Admin' };
       setMessages([...messages, message]);
-    });
+    };
+    socket.on('message', mListener);
+    socket.on('notification', nListener);
+    return () => {
+      socket.off('message', mListener);
+      socket.off('notification', nListener);
+    };
   });
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => setMessage(e.target.value);
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {

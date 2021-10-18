@@ -1,7 +1,9 @@
 import { FC, useState, ChangeEvent, FormEvent, useContext } from 'react';
+import { useParams } from 'react-router-dom';
 import cn from 'classnames/bind';
 import styles from './Login.module.css';
 import { SocketContext } from '../contexts/SocketContext';
+import { IRoom } from '../Room';
 
 const cx = cn.bind(styles);
 export interface IForm {
@@ -10,12 +12,15 @@ export interface IForm {
 }
 
 interface ILoginProps {
-  onLogin: (p: { name: string; room: string }) => void;
+  onLogin: (values: IForm) => void;
+  place?: 'root' | 'room';
 }
 
-export const Login: FC<ILoginProps> = ({ onLogin }) => {
+export const Login: FC<ILoginProps> = (params) => {
+  const { onLogin, place } = params;
   const [values, setValues] = useState<IForm>({ name: '', room: '' });
   const [isValid, setIsValid] = useState(false);
+  const { roomName } = useParams<IRoom>();
   const socket = useContext(SocketContext);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -30,13 +35,20 @@ export const Login: FC<ILoginProps> = ({ onLogin }) => {
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    socket.emit('login', { name: values.name, room: values.room });
-    onLogin({ name: values.name, room: values.room });
+
+    if (place === 'room') {
+      socket.emit('login', { name: values.name, room: roomName });
+      onLogin({ name: values.name, room: roomName });
+    } else {
+      socket.emit('login', { name: values.name, room: values.room });
+      onLogin({ name: values.name, room: values.room });
+    }
   };
 
   return (
     <div className={cx('login')}>
-      <h1 className={cx('title')}>Приветствуем в чате!</h1>
+      <h1 className={cx('title', place === 'room' && 'titleRoom')}>Приветствуем в чате!</h1>
+      {place === 'room' && <p className={cx('text', 'subtitle')}>Вы входите в комнату {roomName}</p>}
       <form className={cx('form')} onSubmit={handleSubmit}>
         <label className={cx('text', 'label')} htmlFor="name">
           Ваше имя
@@ -52,11 +64,11 @@ export const Login: FC<ILoginProps> = ({ onLogin }) => {
           onChange={handleChange}
           required
         />
-        <label className={cx('text', 'label')} htmlFor="room">
+        <label className={cx('text', 'label', place === 'room' && 'disabled')} htmlFor="room">
           Комната для чата
         </label>
         <input
-          className={cx('text', 'input')}
+          className={cx('text', 'input', place === 'room' && 'disabled')}
           name="room"
           id="room"
           type="text"
@@ -64,7 +76,7 @@ export const Login: FC<ILoginProps> = ({ onLogin }) => {
           autoComplete="off"
           value={values?.room}
           onChange={handleChange}
-          required
+          required={place !== 'room'}
         />
         <button className={cx('text', 'button')} type="submit" disabled={!isValid}>
           Войти
