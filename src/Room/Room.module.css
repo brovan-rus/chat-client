@@ -1,0 +1,73 @@
+.room {
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: max-content  1fr 50px;
+  row-gap: 15px;
+  width: 100%;
+  min-width: 300px;
+  max-width: 900px;
+  height: 100%;
+  padding: 5% 10%;
+}
+
+.heading {
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  background-color: var(--white);
+  border-radius: 4px;
+}
+
+.title.text {
+  margin-bottom: 10px;
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 27px;
+}
+
+.text {
+  padding: 0;
+  margin: 0;
+  font-family: 'Inter', 'Arial', sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 17px;
+}
+
+.info {
+  display: grid;
+  grid-auto-rows: repeat(2, max-content);
+  grid-template-columns: 100%;
+  row-gap: 5px;
+}
+
+.messages {
+  height: 100%;
+  background-color: var(--white);
+  list-style-type: none;
+  padding: 12px;
+  margin: 0;
+  border-radius: 4px;
+}
+
+.message {
+  display: flex;
+  flex-direction: row;
+  align-content: space-between;
+  justify-content: space-between;
+  margin-bottom: 7px;
+}
+
+.messageText {
+  max-width: 65%;
+}
+
+.messageMeta {
+  display: grid;
+  grid-template-rows: 100%;
+  grid-template-columns: repeat(2, min-content);
+  column-gap: 5px;
+  max-width: 30%;
+}
+

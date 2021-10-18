@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import './vendor/fonts/fonts.css';
-import './constants/palette.css';
+import './utils/palette.css';
 import { App } from './App/App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
